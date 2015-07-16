@@ -1,0 +1,30 @@
+﻿@using SimpleCMS.App_Code
+@{
+    var mode=Post.Mode;
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        @if (!mode.IsEmpty())
+        {
+          var post= Post.Current;
+        <div>
+            <form name="post" method="post" action="~/admin/post.ashx">
+                <input type="hidden" name="mode" value="@mode" />
+                <p>Title: <input type="text" name="postTitle" value="@post.Title" /></p>
+                <p>Content: <textarea type="text" name="postContent">@post.Content</textarea></p>
+                <p><input type="submit" name="postSubmit" value="Submit" /></p>
+                
+            </form>
+
+        </div>
+        }
+        else
+        {
+            <p>List of contents!</p>
+        }
+    </body>
+</html>
