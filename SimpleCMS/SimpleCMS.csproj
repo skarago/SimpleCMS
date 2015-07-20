@@ -92,6 +92,7 @@
   <ItemGroup>
     <Content Include="App_Code\Handlers\PostHandler.cs" />
     <Content Include="App_Code\Post.cs" />
+    <Content Include="App_Code\Data\PostRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

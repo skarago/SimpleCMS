@@ -14,8 +14,11 @@
         <div>
             <form name="post" method="post" action="~/admin/post.ashx">
                 <input type="hidden" name="mode" value="@mode" />
+                <input type="hidden" name="postId" value="@post.Id" />
                 <p>Title: <input type="text" name="postTitle" value="@post.Title" /></p>
                 <p>Content: <textarea type="text" name="postContent">@post.Content</textarea></p>
+                <p>Slug: <input type="text" name="postSlug" value="@post.Slug" /></p>
+                <p>Date Published: <input type="text" name="postDatePublished" value="@post.DatePublished"/></p>
                 <p><input type="submit" name="postSubmit" value="Submit" /></p>
                 
             </form>
