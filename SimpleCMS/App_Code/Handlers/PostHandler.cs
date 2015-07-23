@@ -37,6 +37,11 @@ namespace SimpleCMS.App_Code.Handlers
             {
                 CreatePost(title, content, slug, datePublished, 1);
             }
+            else if (mode=="delete")
+            {
+                DeletePost(slug);
+            }
+
 
             var result = PostRepository.Get(slug);
             
@@ -57,6 +62,11 @@ namespace SimpleCMS.App_Code.Handlers
                 published = DateTime.Parse(datePublished);
             }
             PostRepository.Add(title, content,slug,published,authorId);
+        }
+
+        public static void DeletePost(string slug)
+        {
+            PostRepository.Remove(slug);
         }
 
         public static void EditPost(int id,string title, string content, string slug, string datePublished, int authorId)

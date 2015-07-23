@@ -34,7 +34,7 @@ namespace SimpleCMS.App_Code
         {
             get
             {
-                if (Mode.ToLower() == "edit")
+                if (Mode.ToLower() != "new")
                 {
                     return Page.UrlData[1];
                 }

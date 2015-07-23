@@ -1,6 +1,9 @@
 ﻿@using SimpleCMS.App_Code
+@using SimpleCMS.App_Code.Data
 @{
     var mode=Post.Mode;
+    Page.Title = "Your Title";
+    Layout = "~/admin/_AdminLayout.cshtml";
 }
 <!DOCTYPE html>
 <html>
@@ -27,7 +30,20 @@
         }
         else
         {
-            <p>List of contents!</p>
+            var grid = new WebGrid(
+                source: PostRepository.GetAll(orderBy:"DateCreated DESC"),
+                rowsPerPage : 30);
+            @grid.GetHtml(
+            columns:grid.Columns(
+            grid.Column(format:@<a href="~/admin/post/edit/@item.Slug">Edit</a>),
+            grid.Column(format:@<a href="~/admin/post/delete/@item.Slug">Delete</a>),
+            grid.Column("Title"),
+            grid.Column("DateCreated",header:"Date Created"),
+            grid.Column("DatePublished",header:"Published"),
+            grid.Column("AuthorId",header:"Author")
+            
+                )
+            );
         }
     </body>
 </html>

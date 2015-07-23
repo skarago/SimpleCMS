@@ -87,6 +87,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\WebMatrix.Data.dll" />
+    <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.4.js" />
+    <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -100,7 +103,9 @@
     <Content Include="admin\post.cshtml">
       <BrowseToURL>~/Admin/post.cshtml</BrowseToURL>
     </Content>
+    <Content Include="admin\_AdminLayout.cshtml" />
     <None Include="Properties\PublishProfiles\SimpleCMS.pubxml" />
+    <Content Include="Scripts\jquery-2.1.4.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
