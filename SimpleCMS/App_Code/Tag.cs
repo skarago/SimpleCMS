@@ -10,7 +10,7 @@ using SimpleCMS.App_Code.Data;
 
 namespace SimpleCMS.App_Code
 {
-    public class Post    
+    public class Tag
     {
 
         public static WebPageRenderingBase Page
@@ -30,7 +30,7 @@ namespace SimpleCMS.App_Code
             }
 
         }
-        public static string Slug
+        public static string UrlFriendlyName
         {
             get
             {
@@ -46,23 +46,17 @@ namespace SimpleCMS.App_Code
         {
             get
             {
-                    var result = PostRepository.Get(Slug);
-                    return result ?? CreatePostObject();
-               
+                    var result = TagRepository.Get(UrlFriendlyName);
+                    return result ?? CreateTagObject();
             }
         }
 
-        private static dynamic CreatePostObject()
+        private static dynamic CreateTagObject()
         {
             dynamic obj = new ExpandoObject();
             obj.Id = 0;
-            obj.Title = string.Empty;
-            obj.Content = string.Empty;
-            obj.DateCreated = DateTime.Now;
-            obj.DatePublished = null;
-            obj.Slug = string.Empty;
-            obj.AuthorId = null;
-
+            obj.Name = string.Empty;
+            obj.UrlFriendlyName = string.Empty;
             return obj;
         }
     

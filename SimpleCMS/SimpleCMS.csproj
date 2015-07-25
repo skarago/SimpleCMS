@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\WebMatrix.Data.dll" />
+    <Content Include="admin\tag.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
@@ -96,6 +97,9 @@
     <Content Include="App_Code\Handlers\PostHandler.cs" />
     <Content Include="App_Code\Post.cs" />
     <Content Include="App_Code\Data\PostRepository.cs" />
+    <Content Include="App_Code\Handlers\TagHandler.cs" />
+    <Content Include="App_Code\Data\TagRepository.cs" />
+    <Content Include="App_Code\Tag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
