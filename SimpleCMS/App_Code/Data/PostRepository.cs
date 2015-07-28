@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using WebMatrix.Data;
@@ -14,9 +15,13 @@ namespace SimpleCMS.App_Code.Data
         {
             using (var db = Database.Open(_connectionString))
             {
-                var sql = "SELECT * FROM Posts WHERE id=@0";
-
-                return db.QuerySingle(sql, id);
+                var sql = "SELECT  p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName " +
+                        "FROM Posts p " +
+                        "LEFT JOIN PostsTagsMap m ON p.Id=m.PostId " +
+                        "LEFT JOIN Tags t ON t.Id=m.TagId WHERE id=@0 ";
+                
+                var results= DoGet(sql,id);
+                return results.Any() ? results.First(): null;
             }
         }
 
@@ -24,24 +29,33 @@ namespace SimpleCMS.App_Code.Data
         {
             using (var db = Database.Open(_connectionString))
             {
-                var sql = "SELECT * FROM Posts WHERE slug=@0";
-
-                return db.QuerySingle(sql, slug);
+                var sql = "SELECT  p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName " +
+                        "FROM Posts p " +
+                        "LEFT JOIN PostsTagsMap m ON p.Id=m.PostId " +
+                        "LEFT JOIN Tags t ON t.Id=m.TagId WHERE slug=@0 ";
+                
+                var results= DoGet(sql,slug);
+                return results.Any() ? results.First(): null;
             }
         }
 
         public static IEnumerable<dynamic> GetAll(string orderBy=null)
         {
+            var posts = new List<dynamic>();
             using (var db = Database.Open(_connectionString))
             {
-                var sql = "SELECT * FROM Posts";
+                var sql = "SELECT  p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName " +
+                        "FROM Posts p " +
+                        "LEFT JOIN PostsTagsMap m ON p.Id=m.PostId " +
+                        "LEFT JOIN Tags t ON t.Id=m.TagId ";
 
                 if (!string.IsNullOrEmpty(orderBy))
                 {
                     sql += " ORDER BY " + orderBy;
                 }
 
-                return db.Query(sql);
+                return DoGet(sql);
+
             }
         }
 
@@ -73,6 +87,53 @@ namespace SimpleCMS.App_Code.Data
                 db.Execute(sql, slug);
 
             }
+        }
+
+        private static IEnumerable<dynamic> DoGet(string sql,params object  [] values)
+        {
+            using (var db = Database.Open(_connectionString))
+            {
+
+                var posts =new List<dynamic>();
+                var results= db.Query(sql,values);
+
+                foreach (var result in results)
+                {
+                    dynamic post = posts.SingleOrDefault(p => p.Id == result.Id);
+                    if (post == null)
+                    {
+                        post = CreatePostObject(result);
+                        posts.Add(post);
+                    }
+                    if (result.TagId == null)
+                    {
+                        continue;
+                    }
+                    dynamic tag = new ExpandoObject();
+                    tag.Id = result.TagId;
+                    tag.Name = result.TagName;
+                    tag.UrlFriendlyName = result.TagUrlFriendlyName;
+
+                    post.Tags.Add(tag);
+                    
+                }
+                return posts.ToArray();
+            }
+            
+        }
+
+        private static dynamic CreatePostObject(dynamic obj)
+        {
+            dynamic post = new ExpandoObject();
+            post.Id = obj.Id;
+            post.Title = obj.Title;
+            post.Content = obj.Content;
+            post.DateCreated = obj.DateCreated;
+            post.DatePublished = obj.DatePublished;
+            post.AuthorId = obj.AuthorId;
+            post.Slug = obj.Slug;
+            post.Tags = new List<dynamic>();
+            return post;
         }
     }
 }
