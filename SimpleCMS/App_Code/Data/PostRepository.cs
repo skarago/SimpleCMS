@@ -18,7 +18,7 @@ namespace SimpleCMS.App_Code.Data
                 var sql = "SELECT  p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName " +
                         "FROM Posts p " +
                         "LEFT JOIN PostsTagsMap m ON p.Id=m.PostId " +
-                        "LEFT JOIN Tags t ON t.Id=m.TagId WHERE id=@0 ";
+                        "LEFT JOIN Tags t ON t.Id=m.TagId WHERE p.id=@0 ";
                 
                 var results= DoGet(sql,id);
                 return results.Any() ? results.First(): null;
@@ -59,34 +59,67 @@ namespace SimpleCMS.App_Code.Data
             }
         }
 
-        public static void Add(string title, string content, string slug,DateTime? datePublished, int authorId)
+        public static void Add(string title, string content, string slug, DateTime? datePublished, int authorId, IEnumerable<int> tags)
         {
             using (var db = Database.Open(_connectionString))
             {
                 var sql = "INSERT INTO Posts (Title,Content,DatePublished,AuthorId,Slug) " +
                         "VALUES (@0,@1,@2,@3,@4)";
                 db.Execute(sql, title, content, datePublished,authorId, slug);
-                
+
+                var post=db.QuerySingle("SELECT * FROM Posts WHERE Slug=@0",slug);
+;
+                AddTags(post.Id,tags, db);
             }
         }
-        public static void Edit(int id,string title, string content, string slug, DateTime? datePublished, int authorId)
+        public static void Edit(int id, string title, string content, string slug, DateTime? datePublished, int authorId, IEnumerable<int> tags)
         {
             using (var db = Database.Open(_connectionString))
             {
-                var sql = "UPDATE Posts SET Title = @0,Content = @1,DatePublished = @2,AuthorId = @3,Slug = @4 " +
-                        "WHERE id=@5";
+                var sql = "UPDATE Posts SET Title = @0,Content = @1,DatePublished = @2,AuthorId = @3,Slug = @4 WHERE id=@5";
                 db.Execute(sql, title, content, datePublished, authorId, slug,id);
-
+                DeleteTags(id, db);
+                AddTags(id,tags, db);
             }
         }
         public static void Remove(string slug)
         {
             using (var db = Database.Open(_connectionString))
             {
-                var sql = "DELETE FROM Posts WHERE Slug=@0;";
-                db.Execute(sql, slug);
+                var sql = "SELECT * FROM Posts WHERE Slug =@0 ";
+                var post = db.QuerySingle(sql, slug);
+                if (post == null)
+                {
+                    return;
+                }
 
+                DeleteTags(post.Id, db);
+                sql = "DELETE FROM Posts WHERE Id=@0;";
+                db.Execute(sql, post.Id);
             }
+        }
+
+        private static void AddTags(int postId,IEnumerable<int> tags, Database db)
+        {
+            if (!tags.Any())
+            {
+                return;
+            }
+
+            var sql = "INSERT INTO PostsTagsMap (PostId,TagId) VALUES (@0,@1) ";
+
+            foreach (var tag in tags)
+            {
+                db.Execute(sql, postId, tag);
+            }
+
+        }
+
+        private static void DeleteTags(int id, Database db)
+        {
+            var sql = "DELETE FROM PostsTagsMap WHERE PostId=@0 ";
+            db.Execute(sql, id);
+
         }
 
         private static IEnumerable<dynamic> DoGet(string sql,params object  [] values)
@@ -121,6 +154,8 @@ namespace SimpleCMS.App_Code.Data
             }
             
         }
+
+
 
         private static dynamic CreatePostObject(dynamic obj)
         {

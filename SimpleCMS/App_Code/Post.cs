@@ -62,7 +62,7 @@ namespace SimpleCMS.App_Code
             obj.DatePublished = null;
             obj.Slug = string.Empty;
             obj.AuthorId = null;
-
+            obj.Tags=new List<dynamic>();
             return obj;
         }
     

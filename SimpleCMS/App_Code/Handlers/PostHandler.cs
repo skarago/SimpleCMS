@@ -23,19 +23,21 @@ namespace SimpleCMS.App_Code.Handlers
             var slug = context.Request.Form["postSlug"];
             var datePublished = context.Request.Form["postDatePublished"];
             var id = context.Request.Form["postId"];
+            var postTags = context.Request.Form["postTags"];
+            var tags = postTags.Split(',').Select(v => Convert.ToInt32(v));
 
             if (string.IsNullOrWhiteSpace(slug))
             {
-                CreateSlug(title);
+               slug= CreateSlug(title);
             }
 
             if (mode == "edit")
             {
-                EditPost(Convert.ToInt32(id) ,title, content, slug, datePublished, 1);
+                EditPost(Convert.ToInt32(id) ,title, content, slug, datePublished, 1,tags);
             }
             else if (mode == "new")
             {
-                CreatePost(title, content, slug, datePublished, 1);
+                CreatePost(title, content, slug, datePublished,1, tags);
             }
             else if (mode=="delete")
             {
@@ -49,7 +51,7 @@ namespace SimpleCMS.App_Code.Handlers
              context.Response.Redirect("~/Admin/post/");
         }
 
-        public static void CreatePost(string title,string content,string slug,string datePublished,int authorId )
+        public static void CreatePost(string title,string content,string slug,string datePublished,int authorId ,IEnumerable<int>tags)
         {
             var result = PostRepository.Get(slug);
             DateTime? published = null;
@@ -61,7 +63,11 @@ namespace SimpleCMS.App_Code.Handlers
             {
                 published = DateTime.Parse(datePublished);
             }
-            PostRepository.Add(title, content,slug,published,authorId);
+            else 
+            {
+                published = DateTime.Now;
+            }
+            PostRepository.Add(title, content,slug,published,authorId,tags);
         }
 
         public static void DeletePost(string slug)
@@ -69,7 +75,7 @@ namespace SimpleCMS.App_Code.Handlers
             PostRepository.Remove(slug);
         }
 
-        public static void EditPost(int id,string title, string content, string slug, string datePublished, int authorId)
+        public static void EditPost(int id, string title, string content, string slug, string datePublished, int authorId, IEnumerable<int> tags)
         {
             var result = PostRepository.Get(id);
             DateTime? published = null;
@@ -81,8 +87,8 @@ namespace SimpleCMS.App_Code.Handlers
             {
                 published = DateTime.Parse(datePublished);
             }
-            //PostRepository.Add(title, content, slug, published, authorId);
-            PostRepository.Edit(id, title, content, slug, published,authorId);
+            //PostRepository.Add(title, content, slug, published, authorId,tags);
+            PostRepository.Edit(id, title, content, slug, published,authorId,tags);
         }
         public static string CreateSlug(string title)
         {
