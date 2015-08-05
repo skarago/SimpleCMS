@@ -100,6 +100,8 @@
     <Content Include="App_Code\Handlers\TagHandler.cs" />
     <Content Include="App_Code\Data\TagRepository.cs" />
     <Content Include="App_Code\Tag.cs" />
+    <Content Include="App_Code\Data\UserRepository.cs" />
+    <Content Include="App_Code\Data\RoleRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
