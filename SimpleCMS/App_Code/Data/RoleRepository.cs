@@ -10,7 +10,7 @@ using WebMatrix.Data;
 /// </summary>
 public class RoleRepository
 {
-    private static readonly string _connectionString = "DefaultConnection";
+    private static readonly string _connectionString = "CMSConnection";
 
     public RoleRepository()
     {

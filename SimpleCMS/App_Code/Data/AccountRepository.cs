@@ -8,11 +8,11 @@ using WebMatrix.Data;
 /// <summary>
 /// Summary description for UserRepository
 /// </summary>
-public class UserRepository
+public class AccountRepository
 {
-    private static readonly string _connectionString = "DefaultConnection";
+    private static readonly string _connectionString = "CMSConnection";
 
-    public UserRepository()
+    public AccountRepository()
     {
 
     }
@@ -57,27 +57,30 @@ public class UserRepository
         }
     }
 
-    public static void Add(string username, string password, string email)
+    public static void Add(string username, string password, string email,IEnumerable<int> roles)
     {
         using (var db = Database.Open(_connectionString))
         {
-            var sql = "SELECT * FROM Users WHERE Username = @0";
+            var selectSql = "SELECT * FROM Users WHERE Username = @0";
 
-            var user = db.QuerySingle(sql, username);
+            var user = db.QuerySingle(selectSql, username);
 
             if (user != null)
             {
                 throw new Exception("User already exists");
             }
 
-            sql = "INSERT INTO Users (Username, Password, Email) " +
+            var sql = "INSERT INTO Users (Username, Password, Email) " +
                 "VALUES (@0, @1, @2)";
 
             db.Execute(sql, username, Crypto.HashPassword(password), email);
+            user = db.QuerySingle(selectSql, username);
+
+            AddRoles(user.id, roles, db);
         }
     }
 
-    public static void Edit(int id, string username, string password, string email)
+    public static void Edit(int id, string username, string password, string email,IEnumerable<int> roles)
     {
         using (var db = Database.Open(_connectionString))
         {
@@ -86,6 +89,9 @@ public class UserRepository
 
             db.Execute(sql, username, Crypto.HashPassword(password), email, id);
 
+            DeleteRoles(id,db);
+
+            AddRoles(id, roles, db);
         }
     }
 
@@ -108,5 +114,27 @@ public class UserRepository
 
             db.Execute(sql, user.Id);
         }
+    }
+
+    private static void AddRoles(int userId, IEnumerable<int> roles, Database db)
+    {
+        if (!roles.Any())
+        {
+            return;
+        }
+
+        var sql = "INSERT INTO UsersRolesMap (UserId,RoleId) VALUES (@0,@1) ";
+
+        foreach (var role in roles)
+        {
+            db.Execute(sql, userId, role );
+        }
+
+    }
+
+    private static void DeleteRoles(int id,Database db)
+    {
+        var sql="DELETE FROM UsersRolesMap WHERE UserId=@0";
+        db.Execute(sql,id);
     }
 }

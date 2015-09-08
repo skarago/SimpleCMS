@@ -88,6 +88,8 @@
   <ItemGroup>
     <Content Include="bin\WebMatrix.Data.dll" />
     <Content Include="admin\tag.cshtml" />
+    <Content Include="admin\account.cshtml" />
+    <Content Include="admin\role.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
@@ -100,8 +102,13 @@
     <Content Include="App_Code\Handlers\TagHandler.cs" />
     <Content Include="App_Code\Data\TagRepository.cs" />
     <Content Include="App_Code\Tag.cs" />
-    <Content Include="App_Code\Data\UserRepository.cs" />
+    <Content Include="App_Code\Data\AccountRepository.cs" />
     <Content Include="App_Code\Data\RoleRepository.cs" />
+    <Content Include="App_Code\Account.cs" />
+    <Content Include="App_Code\Role.cs" />
+    <Content Include="App_Code\WebUser.cs" />
+    <Content Include="App_Code\Handlers\RoleHandler.cs" />
+    <Content Include="App_Code\Handlers\AccountHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
