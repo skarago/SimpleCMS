@@ -1,0 +1,29 @@
+﻿@using SimpleCMS.App_Code
+
+@{
+    Page.Title = "Login";
+    Layout = "~/_SiteLayout.cshtml";
+    var message = string.Empty;
+    if (IsPost)
+    {
+        var username = HttpContext.Current.Request.Form["username"];
+        var password = HttpContext.Current.Request.Form["password"];
+        if (WebUser.AuthenticateAndLogin(username, password))
+        {
+            HttpContext.Current.Response.Redirect("~/admin/default.cshtml");
+
+        }
+        message = "Username and/or password is incorrect.";
+        
+    }
+}
+
+<div>
+    <div class="error">@message</div>
+    <form name="login" method="post">
+        <p>Username: <input type="text" name="username"/></p>
+        <p>Password: <input type="password" name="password"/></p>
+        <p><input type="submit" value="Login" /></p>
+    </form>
+
+</div>

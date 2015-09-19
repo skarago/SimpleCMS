@@ -90,10 +90,15 @@
     <Content Include="admin\tag.cshtml" />
     <Content Include="admin\account.cshtml" />
     <Content Include="admin\role.cshtml" />
+    <Content Include="admin\_PageStart.cshtml" />
+    <Content Include="admin\default.cshtml" />
+    <Content Include="Logout.cshtml" />
+    <Content Include="Login.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Web.config" />
+    <Content Include="_SiteLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Code\Handlers\PostHandler.cs" />

@@ -4,7 +4,9 @@
         <title>@Page.Title</title>
         <script src="~/Scripts/jquery-2.1.4.min.js"></script>
         @RenderSection("head", required: false)
-    </head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="The description of my page" />
+</head>
     <body>
         @RenderBody()
         
