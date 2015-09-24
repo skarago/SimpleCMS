@@ -2,7 +2,7 @@
 
 @{
     Page.Title = "Login";
-    Layout = "~/_SiteLayout.cshtml";
+    //Layout = "~/_SiteLayout.cshtml";
     var message = string.Empty;
     if (IsPost)
     {
@@ -10,8 +10,8 @@
         var password = HttpContext.Current.Request.Form["password"];
         if (WebUser.AuthenticateAndLogin(username, password))
         {
-            HttpContext.Current.Response.Redirect("~/admin/default.cshtml");
-
+            Response.Redirect("~/admin/");
+            
         }
         message = "Username and/or password is incorrect.";
         

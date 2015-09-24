@@ -23,17 +23,17 @@ public class AccountHandler : IHttpHandler, IReadOnlySessionState
 
     public void ProcessRequest(HttpContext context)
     {
-        //AntiForgery.Validate();
+        AntiForgery.Validate();
 
-        //if (!WebUser.IsAuthenticated)
-        //{
-        //    throw new HttpException(401, "You must login to do this.");
-        //}
+        if (!WebUser.IsAuthenticated)
+        {
+            throw new HttpException(401, "You must login to do this.");
+        }
 
-        //if (!WebUser.HasRole(UserRoles.Admin))
-        //{
-        //    throw new HttpException(401, "You do not have permission to do this.");
-        //}
+        if (!WebUser.HasRole(UserRoles.Admin))
+        {
+            throw new HttpException(401, "You do not have permission to do this.");
+        }
 
 
         var mode = context.Request.Form["mode"];

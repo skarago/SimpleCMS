@@ -13,6 +13,18 @@ namespace SimpleCMS.App_Code
             get { return HttpContext.Current.Session; }
         }
 
+        public static bool HasRole(string roleName)
+        {
+            var roles = GetRolesForUser();
+            return roles.Contains(roleName);
+        }
+
+        public static IEnumerable<string> GetRolesForUser()
+
+        {
+            return GetRolesForUser(WebUser.UserId);
+        }
+
         public static IEnumerable<string> GetRolesForUser(int id)
         {
             return RoleRepository.GetRolesForUser(id)

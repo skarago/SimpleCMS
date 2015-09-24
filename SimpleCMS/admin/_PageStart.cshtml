@@ -1,8 +1,7 @@
 ﻿@using SimpleCMS.App_Code
 @{
-    if (WebUser.IsAuthenticated)
+    if (!WebUser.IsAuthenticated)
     {
-        Response.Redirect("~/login/");
-        
+       Response.Redirect("~/login/");
     }
 }

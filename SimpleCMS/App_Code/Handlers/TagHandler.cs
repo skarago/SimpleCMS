@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.SessionState;
 using WebMatrix.Data;
 
 namespace SimpleCMS.App_Code.Handlers
 {
-    public class TagHandler:IHttpHandler
+    public class TagHandler:IHttpHandler,IReadOnlySessionState
     {
         public bool IsReusable
         {
@@ -17,6 +18,16 @@ namespace SimpleCMS.App_Code.Handlers
 
         public void ProcessRequest(HttpContext context)
         {
+            if (!WebUser.IsAuthenticated)
+            {
+                throw new HttpException(401,"You must login to do this.");
+            }
+
+            if (!WebUser.HasRole(UserRoles.Admin) && !WebUser.HasRole(UserRoles.Editor))
+            {
+                throw new HttpException(401,"You do not have permission to do this");
+            }
+
             var mode = context.Request.Form["mode"];
             var name = context.Request.Form["tagName"];
             var friendlyName = context.Request.Form["tagFriendlyName"];

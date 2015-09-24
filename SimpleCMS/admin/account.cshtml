@@ -7,10 +7,10 @@
 
     var mode = Post.Mode;
 
-    @*if (!WebUser.HasRole(UserRoles.Admin))
+    if (!WebUser.HasRole(UserRoles.Admin))
     {
         Response.Redirect("~/admin/");
-    }*@
+    }
 }
     
 @if (!mode.IsEmpty())

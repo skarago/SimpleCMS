@@ -114,6 +114,7 @@
     <Content Include="App_Code\WebUser.cs" />
     <Content Include="App_Code\Handlers\RoleHandler.cs" />
     <Content Include="App_Code\Handlers\AccountHandler.cs" />
+    <Content Include="App_Code\UserRoles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
