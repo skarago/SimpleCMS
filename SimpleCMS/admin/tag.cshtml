@@ -23,6 +23,7 @@
           var tag= Tag.Current;
         <div>
             <form name="tag" method="post" action="~/admin/tag.ashx">
+                @AntiForgery.GetHtml()
                 <input type="hidden" name="mode" value="@mode" />
                 <input type="hidden" name="tagId" value="@tag.Id" />
                 <p>Name: <input type="text" name="tagName" value="@tag.Name" /></p>
