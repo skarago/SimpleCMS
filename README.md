@@ -1,1 +1,1 @@
-Simple CMS is a application that allows publishing, editing and modifying content on Web pages. Web content includes only text at the time of this writing. In a future version will be included graphics, photos, video, audio and code.
+Simple CMS is a application that allows publishing, editing and modifying content. Web content includes only text at the time of this writing. In a future version will be included graphics, photos, video, audio and code.
