@@ -41,6 +41,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MarkdownSharp">
+      <HintPath>..\packages\MarkdownSharp.1.13.0.0\lib\35\MarkdownSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Helpers">
       <HintPath>..\packages\Microsoft.AspNet.WebHelpers.3.2.3\lib\net45\Microsoft.Web.Helpers.dll</HintPath>
@@ -86,14 +89,17 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\MarkdownSharp.dll" />
     <Content Include="bin\WebMatrix.Data.dll" />
     <Content Include="admin\tag.cshtml" />
     <Content Include="admin\account.cshtml" />
     <Content Include="admin\role.cshtml" />
     <Content Include="admin\_PageStart.cshtml" />
     <Content Include="admin\default.cshtml" />
+    <Content Include="css\site.css" />
     <Content Include="Logout.cshtml" />
     <Content Include="Login.cshtml" />
+    <Content Include="default.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />

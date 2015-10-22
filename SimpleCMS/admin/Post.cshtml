@@ -34,7 +34,7 @@
         
         <div>
             <form name="post" method="post" action="~/admin/post.ashx">
-                @AntiForgery.GetHtml();
+                @AntiForgery.GetHtml()
                 <input type="hidden" name="mode" value="@mode" />
                 <input type="hidden" name="postId" value="@post.Id" />
                 <input type="hidden" name="postAuthorId" value="@post.AuthorId" />

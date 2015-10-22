@@ -11,6 +11,20 @@ namespace SimpleCMS.App_Code.Data
     {
         private static readonly string _connectionString="CMSConnection";
 
+        public static IEnumerable<dynamic> GetPublishedPosts()
+        {
+            var posts = new List<dynamic>();
+            var sql = "SELECT  p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName, u.UserName " +
+                    "FROM Posts p " +
+                    "LEFT JOIN PostsTagsMap m ON p.Id=m.PostId " +
+                    "LEFT JOIN Tags t ON t.Id=m.TagId " +
+                    "INNER JOIN Users u ON u.Id=p.AuthorId " +
+                    "WHERE DatePublished IS NOT NULL AND DatePublished < getdate() ";
+
+                return DoGet(sql);
+        }
+
+
         public static dynamic Get(int id)
         {
             using (var db = Database.Open(_connectionString))
@@ -168,6 +182,7 @@ namespace SimpleCMS.App_Code.Data
             post.AuthorId = obj.AuthorId;
             post.Slug = obj.Slug;
             post.Tags = new List<dynamic>();
+            post.UserName = obj.UserName;
             return post;
         }
     }
