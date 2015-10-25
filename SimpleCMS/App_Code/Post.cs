@@ -63,6 +63,7 @@ namespace SimpleCMS.App_Code
             obj.Slug = string.Empty;
             obj.AuthorId = null;
             obj.Tags=new List<dynamic>();
+            obj.UserName = string.Empty;
             return obj;
         }
     

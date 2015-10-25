@@ -11,7 +11,20 @@ namespace SimpleCMS.App_Code.Data
     {
         private static readonly string _connectionString="CMSConnection";
 
-        public static IEnumerable<dynamic> GetPublishedPosts()
+        public static IEnumerable<dynamic> GetPublishedPosts(int count=0)
+        {
+            var posts = new List<dynamic>();
+            var topNo = count > 0 ? string.Format("TOP {0}", count) : string.Empty;
+            var sql = string.Format("SELECT {0} p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName, u.UserName " +
+                    "FROM Posts p " +
+                    "LEFT JOIN PostsTagsMap m ON p.Id=m.PostId " +
+                    "LEFT JOIN Tags t ON t.Id=m.TagId " +
+                    "INNER JOIN Users u ON u.Id=p.AuthorId " +
+                    "WHERE DatePublished IS NOT NULL AND DatePublished < getdate()  ORDER BY DatePublished DESC ",topNo);
+                return DoGet(sql);
+        }
+
+        public static IEnumerable<dynamic> GetPublishedPostsByTag(string tagname)
         {
             var posts = new List<dynamic>();
             var sql = "SELECT  p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName, u.UserName " +
@@ -19,19 +32,19 @@ namespace SimpleCMS.App_Code.Data
                     "LEFT JOIN PostsTagsMap m ON p.Id=m.PostId " +
                     "LEFT JOIN Tags t ON t.Id=m.TagId " +
                     "INNER JOIN Users u ON u.Id=p.AuthorId " +
-                    "WHERE DatePublished IS NOT NULL AND DatePublished < getdate() ";
-
-                return DoGet(sql);
+                    "WHERE DatePublished IS NOT NULL AND DatePublished < getdate() " +
+                    " AND t.UrlFriendlyName=@0 ORDER BY DatePublished DESC ";
+            return DoGet(sql,tagname);
         }
-
 
         public static dynamic Get(int id)
         {
             using (var db = Database.Open(_connectionString))
             {
-                var sql = "SELECT  p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName " +
+                var sql = "SELECT  p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName,u.UserName " +
                         "FROM Posts p " +
                         "LEFT JOIN PostsTagsMap m ON p.Id=m.PostId " +
+                        "INNER JOIN Users u ON u.Id=p.AuthorId " +
                         "LEFT JOIN Tags t ON t.Id=m.TagId WHERE p.id=@0 ";
                 
                 var results= DoGet(sql,id);
@@ -43,9 +56,10 @@ namespace SimpleCMS.App_Code.Data
         {
             using (var db = Database.Open(_connectionString))
             {
-                var sql = "SELECT  p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName " +
+                var sql = "SELECT  p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName,u.UserName " +
                         "FROM Posts p " +
                         "LEFT JOIN PostsTagsMap m ON p.Id=m.PostId " +
+                        "INNER JOIN Users u ON u.Id=p.AuthorId " +
                         "LEFT JOIN Tags t ON t.Id=m.TagId WHERE slug=@0 ";
                 
                 var results= DoGet(sql,slug);
@@ -58,9 +72,10 @@ namespace SimpleCMS.App_Code.Data
             var posts = new List<dynamic>();
             using (var db = Database.Open(_connectionString))
             {
-                var sql = "SELECT  p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName " +
+                var sql = "SELECT  p.*,t.id as TagId, t.name as TagName,t.UrlFriendlyName as TagUrlFriendlyName,u.UserName " +
                         "FROM Posts p " +
                         "LEFT JOIN PostsTagsMap m ON p.Id=m.PostId " +
+                        "INNER JOIN Users u ON u.Id=p.AuthorId " +
                         "LEFT JOIN Tags t ON t.Id=m.TagId ";
 
                 if (!string.IsNullOrEmpty(orderBy))

@@ -1,0 +1,27 @@
+﻿@{
+    var md = PageData[1];
+    
+}
+
+<div class="post-container">
+    <hgroup>
+        <h1 class="post-title">
+            <a href="/archive/post/@Model.Slug/">@Model.Title</a>
+        </h1>
+        <h2>by @Model.UserName</h2>
+    </hgroup>
+    <div class="post-content">
+        @Html.Raw(md.Transform(Model.Content))
+    </div>
+    <label for="tags">Tags:</label>
+    <div class="post-tags" id="tags">
+        <ul>
+            @foreach (var tag in Model.Tags)
+            {
+                <li><a href="/archive/tag/@tag.UrlFriendlyName/">@tag.Name</a></li>
+            }
+        </ul>
+
+    </div>
+</div>
+

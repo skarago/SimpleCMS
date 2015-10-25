@@ -100,11 +100,13 @@
     <Content Include="Logout.cshtml" />
     <Content Include="Login.cshtml" />
     <Content Include="default.cshtml" />
+    <Content Include="archive.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Web.config" />
     <Content Include="_SiteLayout.cshtml" />
+    <Content Include="_post.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Code\Handlers\PostHandler.cs" />
