@@ -34,6 +34,7 @@ namespace SimpleCMS.App_Code.Handlers
             var mode = context.Request.Form["mode"];
             var name = context.Request.Form["roleName"];
             var id = context.Request.Form["roleId"];
+            var resourceItem = context.Request.Form["resourceItem"];
             if (mode == "edit")
             {
                 Edit(Convert.ToInt32(id) ,name);
@@ -44,10 +45,13 @@ namespace SimpleCMS.App_Code.Handlers
             }
             else if (mode=="delete")
             {
-                Delete(name);
+                Delete(name??resourceItem);
             }
-            var result = TagRepository.Get(id);
-             context.Response.Redirect("~/admin/role/");
+            if (string.IsNullOrEmpty(resourceItem))
+            {
+                context.Response.Redirect("~/admin/role/");
+            }
+             
         }
 
         public static void Create(string name)

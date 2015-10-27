@@ -23,7 +23,7 @@ namespace SimpleCMS.App_Code.Handlers
             AntiForgery.Validate();
             if (!WebUser.IsAuthenticated)
             {
-                throw new HttpException(401,"You must login to do this.");
+                throw new HttpException(401, "You must login to do this.");
             }
             if (!WebUser.HasRole(UserRoles.Admin) &&
                 !WebUser.HasRole(UserRoles.Editor) &&
@@ -40,46 +40,51 @@ namespace SimpleCMS.App_Code.Handlers
             var id = context.Request.Form["postId"];
             var postTags = context.Request.Form["postTags"];
             var authorId = context.Request.Form["postAuthorId"];
+            var resourceItem = context.Request.Form["resourceItem"];
             IEnumerable<int> tags = new int[] { };
             if (!string.IsNullOrEmpty(postTags))
             {
                 tags = postTags.Split(',').Select(v => Convert.ToInt32(v));
             }
-            if ((mode == "edit" || mode=="delete") && WebUser.HasRole(UserRoles.Author))
+            if ((mode == "edit" || mode == "delete") && WebUser.HasRole(UserRoles.Author))
             {
                 if (WebUser.UserId != Convert.ToInt32(authorId))
                 {
-                    throw new HttpException(401,"You do not have permission to do that.");
+                    throw new HttpException(401, "You do not have permission to do that.");
+                }
+            }
+
+            if (mode == "delete")
+            {
+                DeletePost(slug ?? resourceItem);
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(slug))
+                {
+                    slug = CreateSlug(title);
+                }
+
+                if (mode == "edit")
+                {
+                    EditPost(Convert.ToInt32(id), title, content, slug, datePublished, Convert.ToInt32(authorId), tags);
+                }
+                else if (mode == "new")
+                {
+                    CreatePost(title, content, slug, datePublished, WebUser.UserId, tags);
                 }
             }
 
 
-            if (string.IsNullOrWhiteSpace(slug))
+
+            if (string.IsNullOrEmpty(resourceItem))
             {
-               slug= CreateSlug(title);
+                context.Response.Redirect("~/Admin/post/");
             }
 
-            if (mode == "edit")
-            {
-                EditPost(Convert.ToInt32(id) ,title, content, slug, datePublished, Convert.ToInt32(authorId),tags);
-            }
-            else if (mode == "new")
-            {
-                CreatePost(title, content, slug, datePublished, WebUser.UserId, tags);
-            }
-            else if (mode=="delete")
-            {
-                DeletePost(slug);
-            }
-
-
-            var result = PostRepository.Get(slug);
-            
-             
-             context.Response.Redirect("~/Admin/post/");
         }
 
-        public static void CreatePost(string title,string content,string slug,string datePublished,int authorId ,IEnumerable<int>tags)
+        public static void CreatePost(string title, string content, string slug, string datePublished, int authorId, IEnumerable<int> tags)
         {
             var result = PostRepository.Get(slug);
             DateTime? published = null;
@@ -91,11 +96,11 @@ namespace SimpleCMS.App_Code.Handlers
             {
                 published = DateTime.Parse(datePublished);
             }
-            else 
+            else
             {
                 published = DateTime.Now;
             }
-            PostRepository.Add(title, content,slug,published,authorId,tags);
+            PostRepository.Add(title, content, slug, published, authorId, tags);
         }
 
         public static void DeletePost(string slug)
@@ -116,12 +121,12 @@ namespace SimpleCMS.App_Code.Handlers
                 published = DateTime.Parse(datePublished);
             }
             //PostRepository.Add(title, content, slug, published, authorId,tags);
-            PostRepository.Edit(id, title, content, slug, published,authorId,tags);
+            PostRepository.Edit(id, title, content, slug, published, authorId, tags);
         }
         public static string CreateSlug(string title)
         {
-            title = title.ToLowerInvariant().Replace(" ","-");
-            title = Regex.Replace(title, @"[^0-9a-z-]",string.Empty);
+            title = title.ToLowerInvariant().Replace(" ", "-");
+            title = Regex.Replace(title, @"[^0-9a-z-]", string.Empty);
             return title;
         }
     }

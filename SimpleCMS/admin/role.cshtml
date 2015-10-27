@@ -17,7 +17,7 @@
     var role = Role.Current;
 
     <div>
-        <form name="role" method="post" action="~/admin/role.ashx">
+        <form name="role" method="post" action="/admin/role.ashx">
             @AntiForgery.GetHtml()
             <input type="hidden" id="mode" name="mode" value="@mode" />
             <input type="hidden" id="roleId" name="roleId" value="@role.Id" />

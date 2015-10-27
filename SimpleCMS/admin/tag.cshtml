@@ -22,7 +22,7 @@
         {
           var tag= Tag.Current;
         <div>
-            <form name="tag" method="post" action="~/admin/tag.ashx">
+            <form name="tag" method="post" action="/admin/tag.ashx">
                 @AntiForgery.GetHtml()
                 <input type="hidden" name="mode" value="@mode" />
                 <input type="hidden" name="tagId" value="@tag.Id" />
@@ -36,6 +36,7 @@
         }
         else
         {
+            @AntiForgery.GetHtml()
             <p><a href="~/admin/tag/new">Create New Tag</a></p>
             var grid = new WebGrid(
                 source: TagRepository.GetAll(orderBy:"Name"),
@@ -43,12 +44,12 @@
             @grid.GetHtml(
             columns:grid.Columns(
             grid.Column(format:@<a href="~/admin/tag/edit/@item.UrlFriendlyName">Edit</a>),
-            grid.Column(format:@<a href="~/admin/tag/delete/@item.UrlFriendlyName">Delete</a>),
-            grid.Column("Name"),
-            grid.Column("UrlFriendlyName",header:"Friendly Name")
-       
-                )
-            );
+            grid.Column(format:@<a data-mode="delete" data-action="/admin/tag.ashx" data-item="@item.Name" href="~/admin/tag/delete/@item.UrlFriendlyName">Delete</a>),
+         grid.Column("Name"),
+         grid.Column("UrlFriendlyName", header: "Friendly Name")
+
+             )
+         );
         }
     </body>
 </html>

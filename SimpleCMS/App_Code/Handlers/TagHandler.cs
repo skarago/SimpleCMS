@@ -34,30 +34,33 @@ namespace SimpleCMS.App_Code.Handlers
             var name = context.Request.Form["tagName"];
             var friendlyName = context.Request.Form["tagFriendlyName"];
             var id = context.Request.Form["tagId"];
+            var resourceItem = context.Request.Form["resourceItem"];
 
-            if (string.IsNullOrWhiteSpace(friendlyName))
+            if (mode=="delete")
             {
-                friendlyName=CreateTag(name);
+                DeleteTag(friendlyName ?? resourceItem);
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(friendlyName))
+                {
+                    friendlyName = CreateTag(name);
+                }
+                if (mode == "edit")
+                {
+                    EditTag(Convert.ToInt32(id), name, friendlyName);
+                }
+                else if (mode == "new")
+                {
+                    CreateTag(name, friendlyName);
+                }
             }
 
-            if (mode == "edit")
+            if (string.IsNullOrEmpty(resourceItem))
             {
-                EditTag(Convert.ToInt32(id) ,name, friendlyName);
+                context.Response.Redirect("~/admin/tag/");
             }
-            else if (mode == "new")
-            {
-                CreateTag(name, friendlyName);
-            }
-            else if (mode=="delete")
-            {
-                DeleteTag(friendlyName);
-            }
-
-
-            var result = TagRepository.Get(id);
-            
              
-             context.Response.Redirect("~/admin/tag/");
         }
 
         public static void CreateTag(string name,string friendlyName)
